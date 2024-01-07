@@ -1,22 +1,104 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { format } from 'date-fns';
+
 
 function App() {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [vehicleNum, setVehicleNum] = useState("");
-
-  const [vehicleList, setVehicleList] = useState([
-    { vehicleNo: "12가1111" ,enterTime : "20240102 12:00"},
-    { vehicleNo: "13가1111" },
-    { vehicleNo: "14가1111" }
-  ])
+  const [selectedInfo, setSelectedInfo] = useState({});
+  const [vehicleList, setVehicleList] = useState([])
 
 
-  const handleInfoOpen = () => {
+
+  const nowTime = new Date;
+  const formattedDate = format(nowTime, 'yyyy-MM-dd HH:mm:ss');
+
+
+
+  const formatDate = (resultDate) => {
+
+    if (resultDate) {
+
+      const date = resultDate.split(" ")[0];
+
+      const year = date.split("-")[0];
+      const month = date.split("-")[1];
+      const day = date.split("-")[2];
+
+      const time = resultDate.split(" ")[1];
+
+      const hour = time.split(":")[0];
+      const min = time.split(":")[1];
+      const sec = time.split(":")[2];
+
+
+      const hourToSec = hour * 60 * 60;
+      const minToSec = min * 60;
+      const secToSec = sec * 1;
+
+
+      const totalSec = (hourToSec + minToSec + secToSec);
+
+
+      return {
+        year: year,
+        month: month,
+        day: day,
+        totalSec: totalSec,
+      }
+    }
+
+  }
+  const [TimeDifference, setTimeDifference] = useState(null);
+
+  const totalTime = () => {
+
+    if (selectedInfo) {
+
+      const curruntDate = formatDate(formattedDate);
+      const enterDate = formatDate(selectedInfo.enterDate);
+
+      const total = curruntDate.totalSec - enterDate.totalSec;
+
+
+
+      if (total < 0) {
+        const abs = Math.abs(total);
+        const h = Math.floor(24 - (abs / 3600));
+        const m = (Math.floor((abs % 3600) / 60))
+        console.log(total / 3600, h + "시", m + "m")
+
+        return (<></>);
+      }
+      else {
+
+      }
+      setTimeDifference(total)
+    }
+
+  }
+
+
+  const handleSearch = async () => {
+
+    try {
+      const res = await axios.get(`http://localhost:8080/home/searchList/${vehicleNum}`)
+      console.log(res.data)
+      setVehicleList(res.data)
+    }
+    catch {
+
+    }
+
+
+
     if (vehicleNum.length > 0) {
       setIsInfoOpen(true)
     }
+
   }
 
   const handleNumberChange = (e) => {
@@ -38,27 +120,56 @@ function App() {
   const handelClear = () => {
     setVehicleNum("");
     setIsInfoOpen(false);
-  }
-  const handleDetailInfo = (e)=>{
-    console.log(e)
+    setSelectedInfo({})
+    setResult({});
   }
 
+  const [result, setResult] = useState({});
+  const handleSelcet = async (info) => {
+    setSelectedInfo(info)
+    console.log(info)
 
+
+    const res = await axios.get(`http://localhost:8080/home/computeTime/${info.vehicleNo}`)
+    console.log(res.data)
+    setResult(res.data)
+
+  }
+  
+
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 실행되도록 함
+
+  const hours = currentTime.getHours();
+  const minutes = currentTime.getMinutes();
+  const seconds = currentTime.getSeconds();
 
   return (
     <div className="container">
       <div className='row'>
-        <div className='col'>
-          <h1>주차장 프로그램</h1>
+        <div className='col mt-4'>
+          <div>
+            <h3>{ "currentTime"+`${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`}</h3>
+          </div>
         </div>
-        <div className='col'>
+        <div className='col mt-4'>
           <label>number input</label>
           <div className='input-group'>
             <input className='form-control' />
             <button>input</button>
           </div>
         </div>
-        <div className='col'>
+        <div className='col mt-4'>
           <label>Area input</label>
           {/* after chage to checkBox */}
           <div className='input-group'>
@@ -96,7 +207,7 @@ function App() {
 
       </div>
       <div className='row'>
-        <div className='col '><button className='w-100 mt-4' onClick={handleInfoOpen}>search</button></div>
+        <div className='col '><button className='w-100 mt-4' onClick={handleSearch}>search</button></div>
       </div>
 
       {isInfoOpen && (
@@ -110,34 +221,60 @@ function App() {
               <div className='col'>
                 <span>Vehicle number :</span>
                 {/* Vehicle numbers List on click to payment */}
-                {vehicleList.filter(item => vehicleNum === item.vehicleNo.substring(item.vehicleNo.length - 4))
-                  .map((no, index) => (
-                    <div key={index}>
-                      <div value={no.enterTime} onClick={(e)=>handleDetailInfo(no)}>{no.vehicleNo}</div>
-                    </div>
-                  ))}
-                  
+
+                {vehicleList.length > 0 ? (
+                  <>
+                    {vehicleList
+                      .map((no, index) => (
+                        <div className='row' key={index}>
+                          <div className='col' value={no.enterTime} onClick={(e) => handleSelcet(no)}>{no.vehicleNo}</div>
+                          <div className='col text-end'><button onClick={(e) => handleSelcet(no)}>select</button></div>
+                        </div>
+                      ))}
+                  </>
+                ) : (
+                  <> search result is empty</>
+                )}
+
+
               </div>
             </div>
+          </div>
+          <hr className='mt-4' />
 
-            {/* this area change Modal */}
-
+          {/* this area change Modal */}
+          <div className='row'>
+            <div className='col-12 mt-4'><h4>vehicleNo : {selectedInfo.vehicleNo}</h4></div>
+          </div>
+          <div className='row'>
+            <div className='col'>
+              enter Time : {selectedInfo.enterDate}
+            </div>
+          </div>
+          <div className='row'>
             <div className='col mt-4'>
               <label className='form-label'>total time</label>
-              <div className='border'><span>time</span></div>
+              <div className='border'><span>
+                {result.days === undefined ? (<>check your vehicle number</>) : (
+                  <>
+                    {result.days + "days " + result.hour + "H " + result.minutes + "M"}
+                  </>
+                )}
+              </span></div>
             </div>
           </div>
 
           <div className='row mt-4'>
             <div className='col'>
               <label className='form-label'>total price</label>
-              <div className='border'><span>price</span></div>
+              <div className='border'><span> {result.price}</span> \</div>
             </div>
           </div>
 
           <div className='row mt-4'>
             <div className='col'>
-              <button className='w-100'>payment</button>
+
+              <button className='w-100 mb-4'>payment</button>
             </div>
           </div>
         </>
