@@ -2,14 +2,20 @@ import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { format } from 'date-fns';
+import { format, isMatch } from 'date-fns';
+import Modal from 'react-modal';
+import { Payment } from './conponent/payment';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import { Success } from './conponent/pay/success';
+
 
 
 function App() {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [vehicleNum, setVehicleNum] = useState("");
   const [selectedInfo, setSelectedInfo] = useState({});
-  const [vehicleList, setVehicleList] = useState([])
+  const [vehicleList, setVehicleList] = useState([]);
+  const [url, setUrl] = useState("");
 
 
 
@@ -52,34 +58,7 @@ function App() {
     }
 
   }
-  const [TimeDifference, setTimeDifference] = useState(null);
 
-  const totalTime = () => {
-
-    if (selectedInfo) {
-
-      const curruntDate = formatDate(formattedDate);
-      const enterDate = formatDate(selectedInfo.enterDate);
-
-      const total = curruntDate.totalSec - enterDate.totalSec;
-
-
-
-      if (total < 0) {
-        const abs = Math.abs(total);
-        const h = Math.floor(24 - (abs / 3600));
-        const m = (Math.floor((abs % 3600) / 60))
-        console.log(total / 3600, h + "시", m + "m")
-
-        return (<></>);
-      }
-      else {
-
-      }
-      setTimeDifference(total)
-    }
-
-  }
 
 
   const handleSearch = async () => {
@@ -135,7 +114,49 @@ function App() {
     setResult(res.data)
 
   }
-  
+
+  const [isModal, setIsModal] = useState(false);
+
+  const [showPayScreen, setShowPayScreen] = useState(false)
+
+  const openModal = () => {
+
+    axios.post(`http://localhost:8080/home/paymentReady`, result).then(
+      res => {
+        console.log(res.data)
+        const data = res.data;
+        setUrl(data)
+
+      }
+    )
+
+    setIsModal(true);
+    console.log(isModal)
+  }
+
+  const closeModal = () => {
+    const result = window.confirm("Do you want to cancel?");
+    if (result) {
+      setIsModal(false);
+      setShowPayScreen(false);
+
+    }
+    else {
+      return;
+    }
+  }
+
+  const handlePayment = () => {
+    const result = window.confirm("Do you want to proceed with the payment?")
+    if (result) {
+      console.log("success")
+      setShowPayScreen(true);
+    }
+    else {
+      console.log("fail");
+    }
+  }
+
 
 
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -159,7 +180,7 @@ function App() {
       <div className='row'>
         <div className='col mt-4'>
           <div>
-            <h3>{ "currentTime"+`${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`}</h3>
+            <h3>{"currentTime" + `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`}</h3>
           </div>
         </div>
         <div className='col mt-4'>
@@ -257,7 +278,7 @@ function App() {
               <div className='border'><span>
                 {result.days === undefined ? (<>check your vehicle number</>) : (
                   <>
-                    {result.days + "days " + result.hour + "H " + result.minutes + "M"}
+                    {result.days + "days " + result.hours + "H " + result.minutes + "M"}
                   </>
                 )}
               </span></div>
@@ -274,11 +295,63 @@ function App() {
           <div className='row mt-4'>
             <div className='col'>
 
-              <button className='w-100 mb-4'>payment</button>
+              <button className="w-100 mb-4" disabled={Object.keys(result).length === 0 ? "disabled" : ""} onClick={openModal}>payment</button>
             </div>
           </div>
         </>
       )}
+
+
+
+      <Modal
+        isOpen={isModal}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        appElement={document.getElementById('root')}
+
+      >
+        <div className='row'>
+          <div className='col'>
+            <h2>Payment Info</h2>
+          </div>
+        </div>
+        <div className='row  mt-4'>
+          <div className='col-10 offset-1'>
+            <table className='table table-border'>
+
+              <tbody>
+                <tr>
+                  <td>vehicle No</td>
+                  <td>{selectedInfo.vehicleNo}</td>
+                </tr>
+                <tr>
+                  <td>parking fee</td>
+                  <td>{result.price} \</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {showPayScreen ? (
+          <div className='row mt-4'>
+            <div className='col '>
+              <Payment url={url} />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className='row mt-4'>
+          <div className='col text-end'>
+            <button className='me-2' onClick={closeModal}>Cancel</button>
+            <button className='me-2' onClick={handlePayment}>payment</button>
+
+          </div>
+        </div>
+      </Modal>
+
+
+ 
     </div>
   );
 }
