@@ -67,7 +67,7 @@ export const MemberJoin = () => {
                     <label>id</label>
                     <input name="memberId" onBlur={collapseId} onChange={handleChange} className="form-control" />
                     {isExist ? (
-                        <div>이미존재하는 아이디</div>
+                        <div>이미 존재하는 아이디</div>
                     ) : (
                         <div>사용가능</div>
                     )}

@@ -10,6 +10,8 @@ import { userState } from './recoliState';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { AddProduct } from './components/product/addPeoduct';
+import { ProductDetail } from './components/product/productDetail';
+import { Footers } from './components/headers/footer';
 
 
 function App() {
@@ -46,7 +48,9 @@ function App() {
       <Route path='/memberJoin' element={<MemberJoin/>}/>
       <Route path='/memberLogin' element={<MemberLogin/>}/>
       <Route path='/addProduct' element={<AddProduct/>}/>
+      <Route path={`/productDetail/:productNo`} element={<ProductDetail/>}/>
     </Routes>
+    <Footers/>
     </BrowserRouter>
       
   );
