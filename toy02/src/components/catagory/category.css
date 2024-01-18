@@ -1,0 +1,9 @@
+.category-item {
+    transition: background-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.category-item:hover {
+    background-color: #e0e0e0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}

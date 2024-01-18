@@ -12,6 +12,8 @@ import axios from 'axios';
 import { AddProduct } from './components/product/addPeoduct';
 import { ProductDetail } from './components/product/productDetail';
 import { Footers } from './components/headers/footer';
+import { InsertProduct } from './components/product/insertProduct';
+import { AddCatagory, AddCategory } from './components/catagory/catagory';
 
 
 function App() {
@@ -49,6 +51,8 @@ function App() {
       <Route path='/memberLogin' element={<MemberLogin/>}/>
       <Route path='/addProduct' element={<AddProduct/>}/>
       <Route path={`/productDetail/:productNo`} element={<ProductDetail/>}/>
+      <Route path='/insertProduct' element={<InsertProduct/>}/>
+      <Route path='/addCategory' element={<AddCategory/>}/>
     </Routes>
     <Footers/>
     </BrowserRouter>
