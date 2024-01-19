@@ -33,7 +33,7 @@ export const MemberLogin =()=>{
                 setUser(res.data)
                 const id = sessionStorage.setItem("memberId", res.data.memberId);
                 const pw =  sessionStorage.setItem("memberPw", res.data.memberPw);
-                navigator("/home")
+                navigator("/")
 
             }
 

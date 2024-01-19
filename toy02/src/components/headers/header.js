@@ -36,11 +36,11 @@ export const Headers = (props) => {
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
-            <Navbar.Brand href="/home">{user !== null ? (user.memberId) : (<>before login</>)}</Navbar.Brand>
+            <Navbar.Brand href="/">{user !== null ? (user.memberId) : (<>before login</>)}</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                    <Nav.Link href="/home">Home</Nav.Link>
+                    <Nav.Link href="/">Home</Nav.Link>
                     <Nav.Link href="#link">Link</Nav.Link>
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -65,7 +65,7 @@ export const Headers = (props) => {
                 ) : (
                     <Nav.Link href="#">mypage</Nav.Link>
                 )}
-                {seller ==="Y"? (<Nav.Link href="/addProduct">addProduct</Nav.Link>):(<></>)}
+                {seller ==="Y"? (<Nav.Link href={'/insertProduct'}>addProduct</Nav.Link>):(<></>)}
             </Nav>
             </Navbar.Collapse>
 

@@ -19,7 +19,7 @@ export const ProductDetail = ({ onPrev }) => {
             <div className="row mt-4">
                 <div className="col">
                     <div className="input-group mb-3">
-                        <label className="input-group-text" for="inputGroupFile01">Upload</label>
+                        <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label>
                         <input type="file" name="images" onChange={handleSelectedFiles} multiple className="form-control" id="inputGroupFile01" />
                     </div>
                 </div>

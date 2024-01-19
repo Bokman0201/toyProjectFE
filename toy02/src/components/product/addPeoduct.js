@@ -11,6 +11,7 @@ export const AddProduct = ({ onNext, onPrev, handleInfoSubmit, productInfos }) =
         productName: '',
         productPrice:0,
         productSeller:'',
+        categoryId: "",
      });
     const [tagList, setTagList] = useState([]);
     const navigator = useNavigate();
