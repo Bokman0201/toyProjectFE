@@ -34,10 +34,15 @@ export const MemberLogin =()=>{
                 const id = sessionStorage.setItem("memberId", res.data.memberId);
                 const pw =  sessionStorage.setItem("memberPw", res.data.memberPw);
                 navigator("/")
-
             }
 
         }).catch(err=>{
+            if(userInfo.memberId===undefined){
+                alert("please check your ID")
+            }
+            if(userInfo.memberPw===undefined){
+                alert("please check your password")
+            }
 
         })
     }
@@ -67,7 +72,7 @@ export const MemberLogin =()=>{
             </div>
             <div className="row mt-4">
                 <div className="col">
-                    <button onClick={sendLogin} className="btn btn-primary w-100">login</button>
+                    <button type="submit" onClick={sendLogin} className="btn btn-primary w-100">login</button>
                 </div>
             </div>
 

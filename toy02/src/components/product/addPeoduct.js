@@ -66,23 +66,7 @@ export const AddProduct = ({ onNext, onPrev, handleInfoSubmit, productInfos }) =
         setTagList(updateList);
     }
 
-    const handleAddProduct = () => {
-        // const result = window.confirm("상품을 등록 하실거냐?")
 
-        // if (result) {
-        //     axios({
-        //         url: `http://localhost:8080/product/addProduct`,
-        //         method: 'post',
-        //         data: data
-        //     }).then(res => {
-        //         console.log(res.data)
-        //         const productNo = res.data
-        //         alert("등록완!")
-        //         navigator(`/productDetail/${productNo}`)
-
-        //     }).catch();
-        //}
-    }
 
     return (
         <div className="">

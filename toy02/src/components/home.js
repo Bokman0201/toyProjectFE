@@ -1,21 +1,35 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import "./Home.css";
+import axios from 'axios';
+import { ProductImage } from '../productImage';
+import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
     const [productList, setProductList] = useState([
-        { productNo: 1 },
-        { productNo: 2 },
-        { productNo: 3 },
-        { productNo: 4 },
-        { productNo: 5 },
-        { productNo: 6 },
-        { productNo: 7 },
-        { productNo: 8 },
-        { productNo: 9 },
+
     ]);
+
+    const navigator = useNavigate();
+
+    useEffect(()=>{
+        getProductList();
+    },[])
+
+    const getProductList = async()=>{
+        try{
+            const res =await axios.get(`http://localhost:8080/product/productList`)
+            console.log(res.data)
+            setProductList(res.data);
+        } catch{}
+
+    }
+    const moveDetail =(no)=>{
+        console.log(no)
+        navigator(`/productDetail/${no}`);
+    }
 
 
     return (
@@ -35,9 +49,11 @@ export const Home = () => {
             <div className='row'>
                 {productList.map((product, index) => (
 
-                    <div key={index} className='col-4 p-2 border '>
-                        <img src='https://dummyimage.com/300x200/000/fff' alt={`Image ${index}`} style={{ width: '100%' }} />
-                        <div><span>index</span></div>
+                    <div key={index} className='col-4 p-2 border ' onClick={()=>moveDetail(product.productNo)}>
+
+                        <ProductImage productNo={product.productNo}/>
+                        {/* <img src='https://dummyimage.com/300x200/000/fff' alt={`Image ${index}`} style={{ width: '100%' }} /> */}
+                        <div><span>{product.productName}</span></div>
                     </div>
                 ))}
             </div>

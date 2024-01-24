@@ -1,26 +1,45 @@
 import { useState } from "react";
 
-export const ProductDetail = ({ onPrev }) => {
+export const ProductDetail = ({ onPrev ,getImages, getProductDetail,handleAddProduct}) => {
 
     const [images, setImages] = useState([]);
+
+    //이미지 attachDto로 정보 넘기기
+
     const handleSelectedFiles = (e) => {
         const selectedFiles = e.target.files;
         const newImages = [];
-
+        //미리보기용
         Array.from(selectedFiles).forEach(file => {
-            const blobURL = URL.createObjectURL(file);
-            newImages.push(blobURL);
+                const blobURL = URL.createObjectURL(file);
+                newImages.push(blobURL);
         });
-
+    
         setImages(newImages);
+        //원본파일 보내기
+        getImages(selectedFiles)
+        console.log(selectedFiles);
     };
+
+    const [detailData,setDetailData] =useState({}); 
+    const changeData = (e)=>{
+        console.log(e.target.value)
+
+        setDetailData({...detailData,
+        [e.target.name] : e.target.value
+        })
+        console.log( [e.target.name]+":"+e.target.value)
+
+        getProductDetail(detailData);
+        console.log(detailData)
+    }
     return (
         <div className="">
             <div className="row mt-4">
                 <div className="col">
                     <div className="input-group mb-3">
                         <label className="input-group-text" htmlFor="inputGroupFile01">Upload</label>
-                        <input type="file" name="images" onChange={handleSelectedFiles} multiple className="form-control" id="inputGroupFile01" />
+                        <input type="file" name="images" onChange={handleSelectedFiles} multiple className="form-control" id="inputGroupFile01"    accept="image/*"/>
                     </div>
                 </div>
             </div>
@@ -33,10 +52,23 @@ export const ProductDetail = ({ onPrev }) => {
                     </div>
                 ))}
             </div>
+            <div className="row mt-4">
+                <div className="col">
+                    <label>제목</label>
+                    <input className="form-control mt-2"  name="productDetailTitle" onChange={changeData}/>
+                </div>
+            </div>
             
             <div className="row mt-4">
                 <div className="col">
-                    <textarea className="form-control"></textarea>
+                    {/* 일단 넣는걸 못적으로  */}
+                    <label className="me-2">내용</label>
+                    <button className="me-2">bold</button>
+                    <button className="me-2">color</button>
+                    <button className="me-2">underline</button>
+                    <button className="me-2">emoji</button>
+                    <button className="me-2">image</button>
+                    <textarea className="form-control mt-2" onChange={changeData} name="productDetailContent" style={{ minHeight: '300px' }} />
                 </div>
             </div>
             <div className=" row mt-4">
@@ -44,8 +76,8 @@ export const ProductDetail = ({ onPrev }) => {
                     <button type="button" className="btn btn-warning btn-prev" onClick={onPrev}>
                         이전단계
                     </button>
-                    <button type="button" className="btn btn-primary ms-2">
-                        다음단계
+                    <button type="button" className="btn btn-primary ms-2" onClick={handleAddProduct}>
+                       submit
                     </button>
                 </div>
             </div>
