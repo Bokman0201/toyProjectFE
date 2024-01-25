@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from 'react';
 import "./Home.css";
 import axios from 'axios';
-import { ProductImage } from '../productImage';
+import { ProductImage } from './productImage';
 import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
@@ -21,13 +21,11 @@ export const Home = () => {
     const getProductList = async()=>{
         try{
             const res =await axios.get(`http://localhost:8080/product/productList`)
-            console.log(res.data)
             setProductList(res.data);
         } catch{}
 
     }
     const moveDetail =(no)=>{
-        console.log(no)
         navigator(`/productDetail/${no}`);
     }
 

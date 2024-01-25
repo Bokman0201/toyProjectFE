@@ -154,9 +154,7 @@ export const Catagory = ({ onPrev, onNext, categorySelect, categoryNo}) => {
 
             <div className="row mt-4">
                 <div className="col text-end">
-                    <button type="button" className="btn btn-warning btn-prev" onClick={onPrev}>
-                        이전단계
-                    </button>
+
                     <button type="button" className="btn btn-primary ms-2" onClick={nextPage}>
                         다음단계
                     </button>

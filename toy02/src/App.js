@@ -30,7 +30,6 @@ function App() {
         const data = {memberId: memberId, memberPw: memberPw}
         try{
           const res = await axios.post(`http://localhost:8080/member/memberLogin`, data)
-          console.log(res.data)
           setUser(res.data);
         }
         catch{

@@ -48,7 +48,7 @@ export const ProductDetail = ({ onPrev ,getImages, getProductDetail,handleAddPro
             <div className="row mt-4">
                 {images.map((image, index) => (
                     <div className="col" key={index}>
-                        <img src={image} alt={`Preview ${index}`} style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                        <img src={image} alt={`Preview ${index}`} style={{ maxWidth: '50%', maxHeight: '100%' }} />
                     </div>
                 ))}
             </div>

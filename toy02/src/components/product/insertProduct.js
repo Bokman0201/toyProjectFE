@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddProduct } from "./addPeoduct";
 import { ProductDetail } from "./addProductDetail";
 import { Catagory } from "./catagory";
 import { useRecoilState } from "recoil";
 import { userState } from "../../recoliState";
 import axios from "axios";
+import { AddPeoductAttr } from "./addProductAttr";
 
 export const InsertProduct = () => {
 
@@ -12,6 +13,8 @@ export const InsertProduct = () => {
 
     const [attach, setAttach] = useState({});
     const [productDetailDto, setProductDetailDto] = useState({});
+
+    const [dataRequestVO, setDataRequestVO ]= useState([]);
 
 
     const [productInfos, setProductInfos] = useState({
@@ -68,6 +71,16 @@ export const InsertProduct = () => {
         })
 
     }
+    
+    const getProductDataList = (list)=>{
+        setDataRequestVO(list);
+
+      
+        console.log("VO",dataRequestVO)
+    }
+    useEffect(()=>{
+        setProductInfos({...productInfos, dataRequestVO:dataRequestVO})
+    },[dataRequestVO])
 
     const handleAddProduct = () => {
         const result = window.confirm("상품을 등록 하실거냐?")
@@ -110,6 +123,7 @@ export const InsertProduct = () => {
         }
     }
 
+
     const nextPage = () => {
         setCurrentPage(currentPage + 1);
     };
@@ -124,8 +138,6 @@ export const InsertProduct = () => {
 
     return (
         <div className="container">
-            <button onClick={check}>check</button>
-
             <div className="row mt-4">
                 <div className="col bg-light p-4">
                     <h2>상품 등록</h2>
@@ -135,7 +147,8 @@ export const InsertProduct = () => {
                 <div className="col">
                     {currentPage === 1 && <Catagory onNext={nextPage} onPrev={prevPage} categorySelect={categorySelect} categoryNo={categoryNo} />}
                     {currentPage === 2 && <AddProduct onNext={nextPage} onPrev={prevPage} handleInfoSubmit={handleInfoSubmit} productInfos={productInfos} />}
-                    {currentPage === 3 && <ProductDetail onPrev={prevPage} getImages={getImages} getProductDetail={getProductDetail} handleAddProduct={handleAddProduct} />}
+                    {currentPage === 3 && <AddPeoductAttr onNext={nextPage} onPrev={prevPage}  getProductDataList={getProductDataList} />}
+                    {currentPage === 4 && <ProductDetail onPrev={prevPage} getImages={getImages} getProductDetail={getProductDetail} handleAddProduct={handleAddProduct} />}
                 </div>
             </div>
         </div>
