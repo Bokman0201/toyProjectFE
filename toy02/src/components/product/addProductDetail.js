@@ -23,15 +23,17 @@ export const ProductDetail = ({ onPrev ,getImages, getProductDetail,handleAddPro
 
     const [detailData,setDetailData] =useState({}); 
     const changeData = (e)=>{
-        console.log(e.target.value)
+        console.log(detailData.productDetailContent)
 
         setDetailData({...detailData,
         [e.target.name] : e.target.value
         })
+
         console.log( [e.target.name]+":"+e.target.value)
 
-        getProductDetail(detailData);
-        console.log(detailData)
+        getProductDetail({...detailData,
+        [e.target.name] : e.target.value
+        });
     }
     return (
         <div className="">
@@ -55,7 +57,7 @@ export const ProductDetail = ({ onPrev ,getImages, getProductDetail,handleAddPro
             <div className="row mt-4">
                 <div className="col">
                     <label>제목</label>
-                    <input className="form-control mt-2"  name="productDetailTitle" onChange={changeData}/>
+                    <input className="form-control mt-2" value={detailData.productDetailTitle}  name="productDetailTitle" onChange={changeData}/>
                 </div>
             </div>
             
@@ -68,7 +70,7 @@ export const ProductDetail = ({ onPrev ,getImages, getProductDetail,handleAddPro
                     <button className="me-2">underline</button>
                     <button className="me-2">emoji</button>
                     <button className="me-2">image</button>
-                    <textarea className="form-control mt-2" onChange={changeData} name="productDetailContent" style={{ minHeight: '300px' }} />
+                    <textarea className="form-control mt-2" value={detailData.productDetailContent}  name="productDetailContent"  onChange={changeData}style={{ minHeight: '300px' }} />
                 </div>
             </div>
             <div className=" row mt-4">
